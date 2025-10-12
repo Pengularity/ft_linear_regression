@@ -1,17 +1,21 @@
-# Python
+# Python bytecode and caches
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Virtual environments
 .env
 .venv
-venv/
 env/
+venv/
+
+# Build and packaging artifacts
 *.egg-info/
 dist/
 build/
 
-# OS
+# OS junk
 .DS_Store
 
 # Project artifacts
