@@ -30,26 +30,20 @@ The implementation involves two critical phases: **standardization** before trai
 
 We transform the original mileage `x` (in km) into a standardized feature `z` using the formula:
 
-$$
-z = \frac{x - \mu}{\sigma}
-$$
+   $z = \frac{x - \mu}{\sigma}$
 
 - **$\mu$ (mu)** is the mean of all mileage values.
 - **$\sigma$ (sigma)** is the population standard deviation of all mileage values.
 
 This transformation gives the new feature `z` a mean of `0` and a standard deviation of `1`. The script then trains the model on these standardized `z` values to learn the relationship:
 
-$$
-y \approx a + b \cdot z
-$$
+   $y \approx a + b \cdot z $ 
 
 #### 2. De-standardization (Post-Training)
 
 The training yields parameters `a` and `b` that work for the standardized feature `z`. To make predictions using the original mileage `x`, we must convert `a` and `b` back into $\theta_0$ and $\theta_1$ for the final model:
 
-$$
-y \approx \theta_0 + \theta_1 \cdot x
-$$
+$y \approx \theta_0 + \theta_1 \cdot x$
 
 We derive the conversion by substituting the standardization formula back into our learned model:
 
@@ -59,13 +53,10 @@ We derive the conversion by substituting the standardization formula back into o
 2.  Substitute the definition of `z`:
     $y = a + b \cdot \left( \frac{x - \mu}{\sigma} \right)$
 
-3.  Distribute and rearrange to match the form $y = \theta_0 + \theta_1 \cdot x$:
-    $$
-    y = a + \frac{b}{\sigma}x - \frac{b\mu}{\sigma}
-    $$
-    $$
-    y = \underbrace{\left( a - \frac{b\mu}{\sigma} \right)}_{\theta_0} + \underbrace{\left( \frac{b}{\sigma} \right)}_{\theta_1}x
-    $$
+3. Distribute and rearrange to match the form y = θ₀ + θ₁·x :
+
+![destandardisation formula](docs/img/destandardization.png)
+
 
 This gives us the exact formulas to convert our learned parameters `a` and `b` back to the final $\theta_0$ and $\theta_1$:
 
