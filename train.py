@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
     """
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--data", default="data.csv", help="CSV file with header: km, price")
+    ap.add_argument("--data", default="data.csv", help="CSV file with header: km,price")
     ap.add_argument("--alpha", type=float, default=0.1, help="Learning rate")
     ap.add_argument("--epochs", type=int, default=1000, help="Number of gradient steps")
     ap.add_argument("--out", default="thetas.json", help="Output JSON file for learned parameters")
@@ -37,11 +37,11 @@ def parse_args() -> argparse.Namespace:
 
 def load_csv(path: str) -> Tuple[List[float], List[float]]:
     """
-    Load a CSV with header 'km, price' and return two lists: xs (km), ys (price).
+    Load a CSV with header 'km,price' and return two lists: xs (km), ys (price).
 
     Defensive parsing:
     - Skips empty lines and non-numeric rows.
-    - Raises valueError if no valid rows are found.
+    - Raises ValueError if no valid rows are found.
     """
 
     xs: List[float] = []
@@ -54,7 +54,7 @@ def load_csv(path: str) -> Tuple[List[float], List[float]]:
             raise ValueError("Empty CSV.")
 
         if len(header) < 2:
-            raise ValueError("Invalid header. Expect at least 2 columns: km, price")
+            raise ValueError("Invalid header. Expect at least 2 columns: km,price")
 
         for row in reader:
             if not row or len(row) < 2:
@@ -70,6 +70,11 @@ def load_csv(path: str) -> Tuple[List[float], List[float]]:
     if not xs:
         raise ValueError("No valid rows found in data.")
     return xs, ys 
+
+
+def _scale_x_thousands(xs: list[float]) -> list[float]:
+    """Scale kilometers to thousands of km to stabilize gradients."""
+    return [x / 1000.0 for x in xs]
 
 
 def train_batch_gradient_descent(xs: list[float], ys: list[float],
@@ -107,15 +112,35 @@ def train_batch_gradient_descent(xs: list[float], ys: list[float],
 def save_thetas(t0: float, t1: float, out_path: str) -> None:
     """Persist learned parameters to a small JSON file"""
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump({"thetas0": t0, "thetas1": t1}, f)
+        json.dump({"theta0": t0, "theta1": t1}, f)
+
+def _mean_std(xs: list[float]) -> tuple[float, float]:
+    m = len(xs)
+    mu = sum(xs) / m
+    var = sum((x - mu) * (x - mu) for x in xs) / m
+    sigma = var ** 0.5 if var > 0 else 1.0
+    return mu, sigma
+
+def _standardize(xs: list[float], mu: float, sigma: float) -> list[float]:
+    return [(x - mu) / sigma for x in xs]
 
 
-def main() ->None:
+def main() -> None:
     args = parse_args()
     xs, ys = load_csv(args.data)
-    t0, t1 = train_batch_gradient_descent(xs, ys, alpha=args.alpha, epochs=args.epochs)
-    save_thetas(t0, t1, args.out)
-    print(f"Saved thetas: θ0={t0:.6f}, θ1={t1:.6f} -> {args.out}")
+
+    # Standardize mileage for stable & fast GD
+    mu, sigma = _mean_std(xs)           # mu, sigma in *km*
+    zs = _standardize(xs, mu, sigma)    # z = (x - mu)/sigma
+
+    a, b = train_batch_gradient_descent(zs, ys, alpha=args.alpha, epochs=args.epochs)
+
+    # Convert back to original units: θ0, θ1 for y ≈ θ0 + θ1 * x
+    theta1 = b / sigma
+    theta0 = a - (b * mu) / sigma
+
+    save_thetas(theta0, theta1, args.out)
+    print(f"Saved thetas (original units): θ0={theta0:.6f}, θ1={theta1:.12f} -> {args.out}")
 
 
 if __name__ == "__main__":
