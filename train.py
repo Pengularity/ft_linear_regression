@@ -71,3 +71,52 @@ def load_csv(path: str) -> Tuple[List[float], List[float]]:
         raise ValueError("No valid rows found in data.")
     return xs, ys 
 
+
+def train_batch_gradient_descent(xs: list[float], ys: list[float],
+                                alpha: float, epochs: int) -> tuple[float, float]:
+    """
+    Batch gradient descent for h(x) = θ0 + θ1 * x
+
+    Simultaneous updates each epoch:
+      θ0 := θ0 - α * (1/m) * Σ (h(x_i) - y_i)
+      θ1 := θ1 - α * (1/m) * Σ (h(x_i) - y_i) * x_i
+
+    Starts from θ0=0.0, θ1=0.0
+    """
+    m = float(len(xs))
+    t0 = 0.0
+    t1 = 0.0
+
+    for _ in range(int(epochs)):
+        sum_err = 0.0
+        sum_err_x = 0.0
+ 
+        for x, y in zip(xs, ys):
+            h = t0 + t1 * x
+            e = h - y
+            sum_err += e
+            sum_err_x += e * x
+        
+        new_t0 = t0 - alpha * (sum_err / m)
+        new_t1 = t1 - alpha * (sum_err_x / m)
+        t0, t1 = new_t0, new_t1
+
+    return t0, t1
+
+
+def save_thetas(t0: float, t1: float, out_path: str) -> None:
+    """Persist learned parameters to a small JSON file"""
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump({"thetas0": t0, "thetas1": t1}, f)
+
+
+def main() ->None:
+    args = parse_args()
+    xs, ys = load_csv(args.data)
+    t0, t1 = train_batch_gradient_descent(xs, ys, alpha=args.alpha, epochs=args.epochs)
+    save_thetas(t0, t1, args.out)
+    print(f"Saved thetas: θ0={t0:.6f}, θ1={t1:.6f} -> {args.out}")
+
+
+if __name__ == "__main__":
+    main()
