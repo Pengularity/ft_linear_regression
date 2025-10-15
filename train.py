@@ -61,7 +61,7 @@ def load_csv(path: str) -> Tuple[List[float], List[float]]:
                 continue
             try:
                 x = float(row[0].strip())
-                y = float(row[0].strip())
+                y = float(row[1].strip())
             except (ValueError, IndexError):
                 continue
             xs.append(x)
