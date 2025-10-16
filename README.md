@@ -1,66 +1,164 @@
-# ft_linear_regression (42)
+ft_linear_regression (42)
 
-A minimal, clean implementation of a **single-variable linear regression** trained with **batch gradient descent**.
-It follows the 42 subject constraints: one predictor (mileage), hypothesis `θ0 + θ1 * mileage`, **simultaneous** updates of the parameters, and a separate predictor program.
+A clean, single-variable linear regression trained with batch gradient descent.
+It predicts car prices from mileage using only Python’s standard library.
 
-- 📄 Subject: [Subject (PDF)](docs/ft_linear_regression.subject.pdf)
+Subject: docs/ft_linear_regression.subject.pdf
+Goal: implement linear regression from scratch — no NumPy, no ML libraries.
 
----
+⸻
 
-## What this repo contains
+SETUP AND QUICK START
+	1.	Create and activate a virtual environment:
+python3 -m venv .venv
+source .venv/bin/activate
+	2.	Install dependencies:
+pip install -r requirements.txt
+	3.	Train the model:
+make
+	4.	Predict a price:
+make predict
+	5.	Run bonus visualizations and metrics:
+make bonus
 
-<details>
-<summary><strong>🧠 Technical Deep-Dive: Why Feature Scaling is Crucial</strong></summary>
+Example:
+python3 train.py –alpha 0.05 –epochs 20000
+python3 predict.py
+Enter a mileage (km): 100000
+Estimated price: 6123.45 euros
 
-### The Problem: Why Scale Features?
+⸻
 
-Gradient descent optimizes parameters by moving in the direction of the steepest descent of the cost function. The "shape" of this cost function is highly sensitive to the scale of your input features.
+PROJECT STRUCTURE
 
-When features have vastly different scales (e.g., mileage in the hundreds of thousands vs. a price in the thousands), the cost function becomes a steep, narrow ellipse. This forces the algorithm to "zig-zag" down the slope, requiring a tiny learning rate and resulting in slow or unstable convergence.
+ft_linear_regression/
+│
+├── train.py                -> trains θ₀, θ₁
+├── predict.py              -> predict price
+├── data.csv                -> training dataset
+├── thetas.json             -> learned parameters
+│
+├── src/
+│   └── linear_regression/
+│       ├── init.py
+│       └── model.py       -> core logic (IO, gradient descent, predict)
+│
+├── bonus/
+│   ├── init.py
+│   ├── plot.py            -> scatter plot and regression line
+│   └── precision.py       -> computes R², MSE, RMSE metrics
+│
+└── Makefile                -> build, clean, re, bonus commands
 
-By **standardizing** the `km` feature, we reshape the cost function's contours to be more circular, allowing gradient descent to take a much more direct and efficient path to the optimal minimum.
+⸻
 
----
+ALGORITHM SUMMARY
 
-### The Two-Phase Process
+Hypothesis:
+y_hat = θ₀ + θ₁ * x
 
-The implementation involves two critical phases: **standardization** before training and **de-standardization** after training.
+Batch Gradient Descent (simultaneous updates):
+θ₀ := θ₀ - α * (1/m) * Σ(y_hat - y)
+θ₁ := θ₁ - α * (1/m) * Σ(y_hat - y) * x
 
-#### 1. Standardization (Pre-Training)
+Feature Standardization:
+To improve numerical stability, the mileage feature is standardized before training.
 
-We transform the original mileage `x` (in km) into a standardized feature `z` using the formula:
+z = (x - μ) / σ
+θ₁ = b / σ
+θ₀ = a - (b * μ / σ)
 
-   $z = \frac{x - \mu}{\sigma}$
+Where:
+μ = mean of mileage values
+σ = standard deviation of mileage values
+a and b are parameters learned on the standardized data.
 
-- **$\mu$ (mu)** is the mean of all mileage values.
-- **$\sigma$ (sigma)** is the population standard deviation of all mileage values.
+⸻
 
-This transformation gives the new feature `z` a mean of `0` and a standard deviation of `1`. The script then trains the model on these standardized `z` values to learn the relationship:
+BONUS PROGRAMS
 
-   $y \approx a + b \cdot z $ 
+bonus/plot.py
+Draws the regression line and the training data points.
+Output: regression_plot.png
 
-#### 2. De-standardization (Post-Training)
+bonus/precision.py
+Computes the model’s performance metrics:
+	•	R² (coefficient of determination)
+	•	MSE (mean squared error)
+	•	RMSE (root mean squared error)
 
-The training yields parameters `a` and `b` that work for the standardized feature `z`. To make predictions using the original mileage `x`, we must convert `a` and `b` back into $\theta_0$ and $\theta_1$ for the final model:
+Typical results after proper training:
+R² ≈ 0.73
+MSE ≈ 445000
+RMSE ≈ 667 euros
 
-$y \approx \theta_0 + \theta_1 \cdot x$
+⸻
 
-We derive the conversion by substituting the standardization formula back into our learned model:
+MAKEFILE COMMANDS
 
-1.  Start with the learned model:
-    $y = a + b \cdot z$
+make              -> Train the model
+make predict      -> Run the predictor
+make bonus        -> Run the bonus scripts (plot + precision)
+make clean        -> Remove caches, pycache, and images
+make fclean       -> Full clean, including thetas.json
+make re           -> fclean + rebuild (train again)
+make lint         -> Run static check using pyflakes (optional)
 
-2.  Substitute the definition of `z`:
-    $y = a + b \cdot \left( \frac{x - \mu}{\sigma} \right)$
+⸻
 
-3. Distribute and rearrange to match the form y = θ₀ + θ₁·x :
+TROUBLESHOOTING
 
-![destandardisation formula](docs/img/destandardization.png)
+Problem: θ₀ or θ₁ are NaN
+Cause: Learning rate α is too high.
+Fix: Reduce α (for example, 0.01 or 0.001).
 
+Problem: R² < 0
+Cause: The model is worse than predicting the mean (not converged).
+Fix: Increase epochs or lower α.
 
-This gives us the exact formulas to convert our learned parameters `a` and `b` back to the final $\theta_0$ and $\theta_1$:
+Problem: ModuleNotFoundError: src
+Cause: Running from the wrong directory.
+Fix: Run from the project root with
+python3 -m bonus.plot
+or use the Makefile target make bonus.
 
-- $\theta_1 = \frac{b}{\sigma}$
-- $\theta_0 = a - \frac{b\mu}{\sigma}$
+Problem: matplotlib not found
+Fix: Install dependencies with
+pip install -r requirements.txt
 
-</details>
+⸻
+
+DESIGN CHOICES
+	•	100% pure Python, no external machine learning libraries.
+	•	Modular design: CLI scripts (train.py, predict.py) separated from logic (src/linear_regression/model.py).
+	•	Feature standardization for faster and more stable convergence.
+	•	Model parameters stored in thetas.json (θ₀ and θ₁ in euros per kilometer).
+	•	42-style Makefile containing all mandatory targets: all, clean, fclean, re, bonus.
+
+⸻
+
+PRECISION METRICS
+
+R² (Coefficient of Determination):
+Measures how much better the model predicts compared to simply guessing the mean.
+R² = 1 means perfect fit.
+R² = 0 means as good as predicting the mean.
+R² < 0 means worse than predicting the mean.
+
+MSE (Mean Squared Error):
+Average of the squared prediction errors (in euros²).
+
+RMSE (Root Mean Squared Error):
+Square root of MSE, gives the average error in euros.
+
+Example interpretation:
+R² = 0.73 → good linear correlation.
+RMSE = 667 → on average, the model is off by 667 euros.
+
+⸻
+
+LICENSE AND CREDITS
+
+Educational project for 42.
+Author: [Your name or 42 login].
+No external ML frameworks were used — only Python’s standard library and matplotlib for the bonus visualizations.
