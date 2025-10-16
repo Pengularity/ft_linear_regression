@@ -1,164 +1,167 @@
-ft_linear_regression (42)
+# ft_linear_regression
 
-A clean, single-variable linear regression trained with batch gradient descent.
-It predicts car prices from mileage using only Python’s standard library.
+> A clean, single-variable linear regression model trained with batch gradient descent. It predicts car prices from mileage using only Python’s standard library.
 
-Subject: docs/ft_linear_regression.subject.pdf
-Goal: implement linear regression from scratch — no NumPy, no ML libraries.
+This project is an implementation of linear regression from scratch as required by the 42 school curriculum. The goal is to build the model without relying on NumPy, scikit-learn, or any other machine learning libraries.
 
-⸻
+---
 
-SETUP AND QUICK START
-	1.	Create and activate a virtual environment:
-python3 -m venv .venv
-source .venv/bin/activate
-	2.	Install dependencies:
-pip install -r requirements.txt
-	3.	Train the model:
-make
-	4.	Predict a price:
-make predict
-	5.	Run bonus visualizations and metrics:
-make bonus
+## 🚀 Setup and Quick Start
 
-Example:
-python3 train.py –alpha 0.05 –epochs 20000
+1.  **Create and activate a virtual environment:**
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Train the model:**
+    ```bash
+    make
+    ```
+
+4.  **Predict a price:**
+    ```bash
+    make predict
+    ```
+
+5.  **Run bonus visualizations and metrics:**
+    ```bash
+    make bonus
+    ```
+
+**Example Usage:**
+```bash
+# Train with custom hyperparameters
+python3 train.py --alpha 0.05 --epochs 20000
+
+# Predict a value
 python3 predict.py
 Enter a mileage (km): 100000
 Estimated price: 6123.45 euros
+```
 
-⸻
-
-PROJECT STRUCTURE
-
-ft_linear_regression/
+***📂 Project Structureft_linear_regression/***
+```bash
 │
-├── train.py                -> trains θ₀, θ₁
-├── predict.py              -> predict price
-├── data.csv                -> training dataset
-├── thetas.json             -> learned parameters
+├── train.py                # Trains the model parameters θ₀ and θ₁
+├── predict.py              # Predicts a price based on a given mileage
+├── data.csv                # Training dataset
+├── thetas.json             # Stores the learned parameters
 │
 ├── src/
 │   └── linear_regression/
-│       ├── init.py
-│       └── model.py       -> core logic (IO, gradient descent, predict)
+│       ├── __init__.py
+│       └── model.py        # Core logic (data I/O, gradient descent, prediction)
 │
 ├── bonus/
-│   ├── init.py
-│   ├── plot.py            -> scatter plot and regression line
-│   └── precision.py       -> computes R², MSE, RMSE metrics
+│   ├── __init__.py
+│   ├── plot.py             # Generates a scatter plot with the regression line
+│   └── precision.py        # Computes R², MSE, and RMSE metrics
 │
-└── Makefile                -> build, clean, re, bonus commands
+└── Makefile                # Commands for build, clean, re, and bonus
+```
+## 🧠 Algorithm Summary
 
-⸻
+Hypothesis Function:
+```bash
+ŷ = θ₀ + θ₁ * x
+```
 
-ALGORITHM SUMMARY
+Where ŷ is the predicted price, x is the mileage, and θ₀ (intercept) and θ₁ (slope) are the model parameters.
 
-Hypothesis:
-y_hat = θ₀ + θ₁ * x
-
-Batch Gradient Descent (simultaneous updates):
-θ₀ := θ₀ - α * (1/m) * Σ(y_hat - y)
-θ₁ := θ₁ - α * (1/m) * Σ(y_hat - y) * x
-
-Feature Standardization:
-To improve numerical stability, the mileage feature is standardized before training.
-
-z = (x - μ) / σ
-θ₁ = b / σ
-θ₀ = a - (b * μ / σ)
+Batch Gradient Descent:
+```bash
+θ₀ := θ₀ - α * (1/m) * Σ(ŷ - y)
+θ₁ := θ₁ - α * (1/m) * Σ(ŷ - y) * x
+```
 
 Where:
-μ = mean of mileage values
-σ = standard deviation of mileage values
-a and b are parameters learned on the standardized data.
+- α is the learning rate
+- m is the number of training samples
+- y is the actual price
 
-⸻
+The goal is to find θ₀ and θ₁ that minimize the Mean Squared Error (MSE).
 
-BONUS PROGRAMS
+Feature Standardization:
+To improve numerical stability and speed up convergence, the mileage feature (x) is standardized before training using the formula:
+```bash
+z = (x - μ) / σ
+```
 
-bonus/plot.py
-Draws the regression line and the training data points.
-Output: regression_plot.png
+Where μ is the mean of all mileage values and σ is the standard deviation.
+After training, the final parameters θ₀ and θ₁ are converted back to original units for real-world predictions:
+```bash
+θ₁ = b / σ
+θ₀ = a - (b * μ / σ)
+```
+---
 
-bonus/precision.py
-Computes the model’s performance metrics:
-	•	R² (coefficient of determination)
-	•	MSE (mean squared error)
-	•	RMSE (root mean squared error)
+## ✨ Bonus Programs
 
-Typical results after proper training:
-R² ≈ 0.73
-MSE ≈ 445000
-RMSE ≈ 667 euros
+```bash
+bonus/plot.py:
+```
+Generates a scatter plot of the training data and overlays the regression line.
+The output is saved as ```regression_plot.png```.
 
-⸻
+```bash
+bonus/precision.py:
+```
+Computes the model’s performance using three key metrics:
 
-MAKEFILE COMMANDS
+- Coefficient of Determination (R²): Measures how much variance in the price can be explained by mileage.
+  R² = 1 means perfect fit; R² = 0 means no better than predicting the mean; R² < 0 means worse than the mean.
 
-make              -> Train the model
-make predict      -> Run the predictor
-make bonus        -> Run the bonus scripts (plot + precision)
-make clean        -> Remove caches, pycache, and images
-make fclean       -> Full clean, including thetas.json
-make re           -> fclean + rebuild (train again)
-make lint         -> Run static check using pyflakes (optional)
+- Mean Squared Error (MSE): Average of squared differences between predicted and actual values.
 
-⸻
+- Root Mean Squared Error (RMSE): The square root of MSE, giving the error in euros.
 
-TROUBLESHOOTING
+Typical Results After Training:
+```bash
+R² score ≈ 0.73
+MSE      ≈ 445000
+RMSE     ≈ 667€
+```
 
-Problem: θ₀ or θ₁ are NaN
-Cause: Learning rate α is too high.
-Fix: Reduce α (for example, 0.01 or 0.001).
+---
 
-Problem: R² < 0
-Cause: The model is worse than predicting the mean (not converged).
-Fix: Increase epochs or lower α.
+## 🛠️ Makefile Commands
 
-Problem: ModuleNotFoundError: src
-Cause: Running from the wrong directory.
-Fix: Run from the project root with
-python3 -m bonus.plot
-or use the Makefile target make bonus.
+```bash
+make              -> Train the model and save thetas.json
+make predict      -> Run the interactive price predictor
+make bonus        -> Run both bonus scripts (plot and precision)
+make clean        -> Remove caches, __pycache__, and generated images
+make fclean       -> Perform a full clean, also removing thetas.json
+make re           -> Run fclean then retrain from scratch
+make lint         -> Run a static code check using Pyflakes
+```
 
-Problem: matplotlib not found
-Fix: Install dependencies with
-pip install -r requirements.txt
+---
 
-⸻
+## 🔍 Troubleshooting
 
-DESIGN CHOICES
-	•	100% pure Python, no external machine learning libraries.
-	•	Modular design: CLI scripts (train.py, predict.py) separated from logic (src/linear_regression/model.py).
-	•	Feature standardization for faster and more stable convergence.
-	•	Model parameters stored in thetas.json (θ₀ and θ₁ in euros per kilometer).
-	•	42-style Makefile containing all mandatory targets: all, clean, fclean, re, bonus.
+Problem: ```θ₀``` or ```θ₁``` are NaN after training
+Cause: The learning rate ```α``` is too high, causing divergence.
+Fix: Reduce ```α``` (e.g., try 0.01 or 0.001).
 
-⸻
+Problem: R² score is negative
+Cause: The model has not converged and performs worse than the mean baseline.
+Fix: Increase the number of ```epochs``` or reduce ```α```.
 
-PRECISION METRICS
+Problem: ```matplotlib``` not found
+Cause: Dependencies not installed.
+Fix: Run ```pip install -r requirements.txt```.
 
-R² (Coefficient of Determination):
-Measures how much better the model predicts compared to simply guessing the mean.
-R² = 1 means perfect fit.
-R² = 0 means as good as predicting the mean.
-R² < 0 means worse than predicting the mean.
+---
 
-MSE (Mean Squared Error):
-Average of the squared prediction errors (in euros²).
+## 📜 License and Credits
 
-RMSE (Root Mean Squared Error):
-Square root of MSE, gives the average error in euros.
-
-Example interpretation:
-R² = 0.73 → good linear correlation.
-RMSE = 667 → on average, the model is off by 667 euros.
-
-⸻
-
-LICENSE AND CREDITS
-
-Educational project for 42.
-Author: [Your name or 42 login].
-No external ML frameworks were used — only Python’s standard library and matplotlib for the bonus visualizations.
+This is an educational project for the 42 school curriculum.
+Author: William Nguyen
+No external ML frameworks were used — the model is built entirely with Python’s standard library, and matplotlib is used only for bonus visualizations.
