@@ -4,6 +4,7 @@ precision.py — evaluate model precision R² score ans MSE(Mean Squared Error).
 """
 
 from __future__ import annotations
+import math
 from src.linear_regression import load_csv, load_thetas, estimate_price
 
 
@@ -24,10 +25,12 @@ def main():
 
     r2 = compute_r2(xs, ys, t0, t1)
     mse = compute_mse(xs, ys, t0, t1)
+    rmse = math.sqrt(mse)
 
     print(f"Model precision:")
     print(f"  R² score = {r2:.4f}")
     print(f"  MSE      = {mse:.2f}")
+    print(f"  RMSE     = {rmse:.2f}€")
 
 
 if __name__ == "__main__":
