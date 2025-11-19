@@ -36,8 +36,8 @@ def main() -> None:
     save_thetas(theta0, theta1, args.out)
     print(f"Saved thetas (original units): θ0={theta0:.6f}, θ1={theta1:.12f} -> {args.out}")
     with open("model_params.txt", "a", encoding="utf-8") as log:
-    	log.write(f"alpha={args.alpha}, epochs={args.epochs}, "
-              f"theta0={theta0:.6f}, theta1={theta1:.6f}\n")
+        log.write(f"alpha={args.alpha}, epochs={args.epochs}, "
+                  f"theta0={theta0:.6f}, theta1={theta1:.6f}\n")
 
 
 if __name__ == "__main__":

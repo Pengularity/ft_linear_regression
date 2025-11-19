@@ -25,7 +25,10 @@ def _parse_mileage() -> float:
     try:
         mileage = float(raw)
     except ValueError:
-        print("Invalid input. Please enter a numeric mileage (km).", file=sys.stderr)
+        print(
+            "Invalid input. Please enter a numeric mileage (km).",
+            file=sys.stderr
+        )
         sys.exit(1)
 
     if mileage < 0:

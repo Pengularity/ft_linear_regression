@@ -16,7 +16,8 @@ def compute_r2(xs, ys, t0, t1):
 
 
 def compute_mse(xs, ys, t0, t1):
-    return sum((y - estimate_price(x, t0, t1)) ** 2 for x, y in zip(xs, ys)) / len(xs)
+    return sum((y - estimate_price(x, t0, t1))
+               ** 2 for x, y in zip(xs, ys)) / len(xs)
 
 
 def main():
@@ -27,7 +28,7 @@ def main():
     mse = compute_mse(xs, ys, t0, t1)
     rmse = math.sqrt(mse)
 
-    print(f"Model precision:")
+    print("Model precision: ")
     print(f"  R² score = {r2:.4f}")
     print(f"  MSE      = {mse:.2f}")
     print(f"  RMSE     = {rmse:.2f}€")

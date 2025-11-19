@@ -5,7 +5,10 @@ from typing import List, Tuple
 
 
 def load_csv(path: str) -> Tuple[List[float], List[float]]:
-    """Load a CSV with header 'km,price' and return two lists: xs (km), ys (price)."""
+    """
+    Load a CSV with header 'km,price'
+    Return two lists: xs (km), ys (price).
+    """
     xs: List[float] = []
     ys: List[float] = []
     with open(path, "r", encoding="utf-8") as f:
@@ -13,9 +16,13 @@ def load_csv(path: str) -> Tuple[List[float], List[float]]:
         try:
             header = next(reader)
         except StopIteration:
-            raise ValueError("Empty CSV. Expect header 'km,price' and numeric rows.")
+            raise ValueError(
+                "Empty CSV. Expect header 'km,price' and numeric rows."
+                )
         if len(header) < 2:
-            raise ValueError("Invalid header. Expect at least 2 columns: km,price")
+            raise ValueError(
+                "Invalid header. Expect at least 2 columns: km,price"
+                )
         for row in reader:
             if not row or len(row) < 2:
                 continue
@@ -31,14 +38,20 @@ def load_csv(path: str) -> Tuple[List[float], List[float]]:
     return xs, ys
 
 
-def save_thetas(theta0: float, theta1: float, out_path: str = "thetas.json") -> None:
-    """Persist learned parameters (original units: $/km) to JSON."""
+def save_thetas(theta0: float, theta1: float,
+                out_path: str = "thetas.json") -> None:
+    """
+    Persist learned parameters (original units: $/km) to JSON.
+    """
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump({"theta0": theta0, "theta1": theta1}, f)
 
 
 def load_thetas(path: str = "thetas.json") -> tuple[float, float]:
-    """Load θ0, θ1 from JSON; fallback to zeros if file missing/corrupt."""
+    """
+    Load θ0, θ1 from JSON;
+    Fallback to zeros if file missing/corrupt.
+    """
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
