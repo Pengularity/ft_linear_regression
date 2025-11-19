@@ -22,3 +22,5 @@ build/
 thetas.json
 regression_plot.png
 model_params.txt
+
+*.toml

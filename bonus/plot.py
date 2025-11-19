@@ -10,9 +10,12 @@ def main():
     plt.scatter(xs, ys, s=12, label="data")
 
     x_min, x_max = min(xs), max(xs)
-    plt.plot([x_min, x_max],
-             [estimate_price(x_min, t0, t1),
-             estimate_price(x_max, t0, t1)], color="red", label="fit")
+    plt.plot(
+        [x_min, x_max],
+        [estimate_price(x_min, t0, t1), estimate_price(x_max, t0, t1)],
+        color="red",
+        label="fit",
+    )
 
     plt.xlabel("mileage (km)")
     plt.ylabel("price")

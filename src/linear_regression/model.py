@@ -18,11 +18,11 @@ def load_csv(path: str) -> Tuple[List[float], List[float]]:
         except StopIteration:
             raise ValueError(
                 "Empty CSV. Expect header 'km,price' and numeric rows."
-                )
+            )
         if len(header) < 2:
             raise ValueError(
                 "Invalid header. Expect at least 2 columns: km,price"
-                )
+            )
         for row in reader:
             if not row or len(row) < 2:
                 continue
@@ -38,8 +38,9 @@ def load_csv(path: str) -> Tuple[List[float], List[float]]:
     return xs, ys
 
 
-def save_thetas(theta0: float, theta1: float,
-                out_path: str = "thetas.json") -> None:
+def save_thetas(
+    theta0: float, theta1: float, out_path: str = "thetas.json"
+) -> None:
     """
     Persist learned parameters (original units: $/km) to JSON.
     """
@@ -66,7 +67,7 @@ def mean_std(xs: list[float]) -> tuple[float, float]:
     m = len(xs)
     mu = sum(xs) / m
     var = sum((x - mu) * (x - mu) for x in xs) / m
-    sigma = var ** 0.5 if var > 0 else 1.0
+    sigma = var**0.5 if var > 0 else 1.0
     return mu, sigma
 
 
@@ -74,10 +75,9 @@ def standardize(xs: list[float], mu: float, sigma: float) -> list[float]:
     return [(x - mu) / sigma for x in xs]
 
 
-def train_batch_gradient_descent(xs: list[float],
-                                 ys: list[float],
-                                 alpha: float,
-                                 epochs: int) -> tuple[float, float]:
+def train_batch_gradient_descent(
+    xs: list[float], ys: list[float], alpha: float, epochs: int
+) -> tuple[float, float]:
     """
     Batch gradient descent for h(x) = θ0 + θ1 * x
     Simultaneous updates each epoch:
