@@ -6,41 +6,48 @@ This project is an implementation of linear regression from scratch as required 
 
 ---
 
+## 🐳 Dockerized Environment
+
+In strict adherence to the **"System Isolation"** guideline, this project is fully containerized. 
+It does **not** pollute your local shell with `pip` packages or virtual environments.
+
+* **Isolation:** Runs in a pristine `python:3.11-slim` container.
+* **Reproducibility:** Guarantees identical results on every machine.
+* **Persistence:** Trained models (`thetas.json`) are saved to your local host machine via volume mounting.
+
 ## 🚀 Setup and Quick Start
 
-1.  **Create and activate a virtual environment:**
-    ```bash
-    python3 -m venv .venv
-    source .venv/bin/activate
-    ```
+1.  **Prerequisite:** Ensure **Docker** is installed and running.
 
-2.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
 
-3.  **Train the model:**
+2.  **Train the model:**
     ```bash
     make
     ```
 
-4.  **Predict a price:**
+3.  **Predict a price:**
     ```bash
     make predict
     ```
 
-5.  **Run bonus visualizations and metrics:**
+4.  **Run bonus visualizations and metrics:**
     ```bash
     make bonus
     ```
 
+## ⚙️ Custom Parameters
+    ```bash
+    Parameters  Default  Description
+    ALPHA       0.05     Learning Rate (step size)
+    EPOCHS      20000    Number of training iterations
+    ```
 **Example Usage:**
 ```bash
 # Train with custom hyperparameters
-python3 train.py --alpha 0.05 --epochs 20000
+make train ALPHA=0.01 EPOCHS=50000
 
 # Predict a value
-python3 predict.py
+make predict
 Enter a mileage (km): 100000
 Estimated price: 6123.45 euros
 ```

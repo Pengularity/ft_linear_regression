@@ -24,3 +24,4 @@ regression_plot.png
 model_params.txt
 
 *.toml
+.dockerignore
