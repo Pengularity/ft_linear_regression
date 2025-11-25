@@ -36,11 +36,12 @@ It does **not** pollute your local shell with `pip` packages or virtual environm
     ```
 
 ## ⚙️ Custom Parameters
-    ```bash
+
     Parameters  Default  Description
+
     ALPHA       0.05     Learning Rate (step size)
     EPOCHS      20000    Number of training iterations
-    ```
+
 **Example Usage:**
 ```bash
 # Train with custom hyperparameters
