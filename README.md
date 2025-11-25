@@ -71,6 +71,7 @@ Estimated price: 6123.45 euros
 │   ├── plot.py             # Generates a scatter plot with the regression line
 │   └── precision.py        # Computes R², MSE, and RMSE metrics
 │
+├── Dockerfile              # Environment definition
 └── Makefile                # Commands for build, clean, re, and bonus
 ```
 ## 🧠 Algorithm Summary
