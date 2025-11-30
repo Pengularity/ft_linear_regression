@@ -143,6 +143,7 @@ RMSE     ≈ 667€
 
 ```bash
 make              -> Train the model and save thetas.json
+make train        -> Train the model with custom parameters (ALPHA= , EPOCHS=)
 make predict      -> Run the interactive price predictor
 make bonus        -> Run both bonus scripts (plot and precision)
 make clean        -> Remove caches, __pycache__, and generated images
