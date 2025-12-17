@@ -174,4 +174,4 @@ Fix: Run ```pip install -r requirements.txt```.
 
 This is an educational project for the 42 school curriculum.
 Author: William Nguyen
-No external ML frameworks were used — the model is built entirely with Python’s standard library, and matplotlib is used only for bonus visualizations.
+The model is built entirely with Python’s standard library. No external ML frameworks were used, and matplotlib is used only for bonus visualizations.
