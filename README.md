@@ -1,10 +1,12 @@
-![Python](https://img.shields.io/badge/python-3.11-blue.svg)
-![Docker](https://img.shields.io/badge/docker-enabled-blue.svg)
+
 # ft_linear_regression
 
 Linear Regression from Scratch: Mathematical Foundations
 
 > A robust implementation of a univariate linear regression model using Batch Gradient Descent, built without external ML libraries.
+
+![Python](https://img.shields.io/badge/python-3.11-blue.svg)
+![Docker](https://img.shields.io/badge/docker-enabled-blue.svg)
 
 This project is an implementation of linear regression from scratch as required by the 42 school curriculum. The goal is to build the model without relying on NumPy, scikit-learn, or any other machine learning libraries.
 
