@@ -1,6 +1,10 @@
+![Python](https://img.shields.io/badge/python-3.11-blue.svg)
+![Docker](https://img.shields.io/badge/docker-enabled-blue.svg)
 # ft_linear_regression
 
-> A clean, single-variable linear regression model trained with batch gradient descent. It predicts car prices from mileage using only Python’s standard library.
+Linear Regression from Scratch: Mathematical Foundations
+
+> A robust implementation of a univariate linear regression model using Batch Gradient Descent, built without external ML libraries.
 
 This project is an implementation of linear regression from scratch as required by the 42 school curriculum. The goal is to build the model without relying on NumPy, scikit-learn, or any other machine learning libraries.
 
@@ -74,20 +78,25 @@ Estimated price: 6123.45 euros
 ├── Dockerfile              # Environment definition
 └── Makefile                # Commands for build, clean, re, and bonus
 ```
-## 🧠 Algorithm Summary
+## 🧠 Mathematical Framework
 
-Hypothesis Function:
-```bash
-ŷ = θ₀ + θ₁ * x
-```
+1. Hypothesis Function
+The model predicts the output using a linear relationship:
+
+$$\hat{y} = \theta_0 + \theta_1 x$$
 
 Where ŷ is the predicted price, x is the mileage, and θ₀ (intercept) and θ₁ (slope) are the model parameters.
 
-Batch Gradient Descent:
-```bash
-θ₀ := θ₀ - α * (1/m) * Σ(ŷ - y)
-θ₁ := θ₁ - α * (1/m) * Σ(ŷ - y) * x
-```
+2. Cost Function (Mean Squared Error)
+To measure performance, we minimize the MSE:
+
+$$J(\theta_0, \theta_1) = \frac{1}{2m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)})^2$$
+
+3. Optimization: Batch Gradient Descent:
+
+$$\theta_0 := \theta_0 - \alpha \frac{1}{m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)})$$
+
+$$\theta_1 := \theta_1 - \alpha \frac{1}{m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)}) \cdot x^{(i)}$$
 
 Where:
 - α is the learning rate
@@ -167,6 +176,14 @@ Fix: Increase the number of ```epochs``` or reduce ```α```.
 Problem: ```matplotlib``` not found
 Cause: Dependencies not installed.
 Fix: Run ```pip install -r requirements.txt```.
+
+---
+
+🏥 Relevance to Medical Data Science
+While this project uses a vehicle dataset, the underlying logic is fundamental to biomedical engineering:
+ - Standardization: Crucial for clinical datasets where biomarkers (e.g., blood pressure vs. enzyme levels) have different scales.
+ - Gradient Descent: The engine behind modern Neural Networks used in Data Science and Deep learning.
+ - Interpretability: Unlike "black-box" models, this scratch implementation allows for full auditability of the decision process, a requirement in medical diagnostics.
 
 ---
 
