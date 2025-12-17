@@ -179,7 +179,8 @@ Fix: Run ```pip install -r requirements.txt```.
 
 ---
 
-🏥 Relevance to Medical Data Science
+## 🏥 Relevance to Medical Data Science
+
 While this project uses a vehicle dataset, the underlying logic is fundamental to biomedical engineering:
  - Standardization: Crucial for clinical datasets where biomarkers (e.g., blood pressure vs. enzyme levels) have different scales.
  - Gradient Descent: The engine behind modern Neural Networks used in Data Science and Deep learning.
